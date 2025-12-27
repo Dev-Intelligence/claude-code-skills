@@ -18,8 +18,22 @@ description: 自动生成技术演示幻灯片项目。用于创建 LLM 模型�
 **重要**：必须通过交互式问答收集足够信息后才能开始生成，不要用户一句话就直接生成。
 
 ```
-Step 1: 场景识别 → Step 2: 信息收集 → Step 3: 大纲确认 → Step 4-6: 生成
+Step 1: 场景识别 → Step 2: 信息收集 → Step 3: 大纲确认 → Step 4-7: 生成与验证
 ```
+
+### Step 0: 环境检查（自动执行）
+
+在开始工作前，检查并安装必要的 MCP 工具：
+
+```bash
+# 检查 chrome-devtools MCP 是否已安装
+claude mcp list | grep -q "chrome-devtools"
+
+# 如果未安装，自动安装
+claude mcp add chrome-devtools -- npx chrome-devtools-mcp@latest
+```
+
+**chrome-devtools MCP** 用于在生成项目后通过浏览器验证 PPT 效果，确保生成质量。
 
 ### Step 1: 场景识别
 
@@ -128,9 +142,43 @@ cd <项目名称>
 
 # 4. 更新 index.html 标题
 
-# 5. 安装依赖并启动
+# 5. 安装依赖并启动（后台运行）
 npm install && npm run dev
 ```
+
+### Step 7: 浏览器验证
+
+项目启动后，使用 chrome-devtools MCP 验证 PPT 效果：
+
+1. **打开浏览器访问项目**
+   ```
+   使用 mcp__chrome-devtools__navigate_page 访问 http://localhost:5173
+   ```
+
+2. **截图验证每页效果**
+   ```
+   使用 mcp__chrome-devtools__take_screenshot 截取当前页面
+   检查布局、颜色、内容是否正确
+   ```
+
+3. **交互测试**
+   ```
+   使用 mcp__chrome-devtools__click 测试导航、翻页功能
+   确保所有交互正常工作
+   ```
+
+4. **问题修复**
+   - 如发现样式问题，修改 tailwind.config.js 或组件样式
+   - 如发现内容问题，修改 slidesData.js
+   - 修改后浏览器会自动热更新，再次验证
+
+**验证检查清单**：
+- [ ] 首页标题、副标题显示正确
+- [ ] 主题颜色应用正确
+- [ ] 左侧导航栏可正常展开/收起
+- [ ] 翻页功能正常
+- [ ] 所有任务页面内容完整
+- [ ] 总结页显示正确
 
 ## 场景模板
 
@@ -259,7 +307,16 @@ Claude: "信息收集完成！以下是 PPT 大纲：
 
 用户: "确认"
 
-Claude: [开始复制模板、写入数据、启动项目]
+Claude: [检查 chrome-devtools MCP，如未安装则自动安装]
+Claude: [复制模板、写入数据、启动项目]
+Claude: [使用 chrome-devtools 打开浏览器验证效果]
+Claude: "PPT 已生成并验证完成！
+  - 首页显示正常 ✓
+  - 主题颜色正确 ✓
+  - 导航和翻页功能正常 ✓
+  - 所有任务页面内容完整 ✓
+
+  项目地址：http://localhost:5173"
 ```
 
 ### 示例 2: 产品演示（完整交互流程）
@@ -305,7 +362,10 @@ Claude: "信息收集完成！以下是 PPT 大纲：
 
 用户: "确认"
 
-Claude: [开始生成项目]
+Claude: [检查 chrome-devtools MCP，如未安装则自动安装]
+Claude: [复制模板、写入数据、启动项目]
+Claude: [使用 chrome-devtools 打开浏览器验证效果]
+Claude: "PPT 已生成并验证完成！项目地址：http://localhost:5173"
 ```
 
 ## 项目结构说明
