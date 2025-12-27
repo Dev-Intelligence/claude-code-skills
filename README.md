@@ -16,9 +16,19 @@ Claude Code skills collection by [程序员阿江-Relakkes](https://space.bilibi
 /plugin install slides-generator@claude-code-skills
 ```
 
-### 3. 重启 Claude Code
+### 3. 启用 Plugin
 
-安装完成后重启 Claude Code 即可使用。
+安装后插件默认为禁用状态，需要手动启用：
+
+```bash
+/plugin enable slides-generator@claude-code-skills
+```
+
+或在 `/plugin` 界面的 Installed 标签页中选择 "Enable plugin"。
+
+### 4. 重启 Claude Code（可选）
+
+如果启用后仍无法使用，尝试重启 Claude Code。
 
 ## 包含的 Skills
 
