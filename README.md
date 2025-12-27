@@ -34,15 +34,26 @@ claude-code-skills/
 │   └── slides-generator/         # 幻灯片生成器 Skill
 │       ├── SKILL.md              # Skill 定义
 │       ├── references/           # 参考文档
+│       │   ├── aesthetics.md     # 设计美学指南
 │       │   ├── palettes.md       # 76个配色方案
-│       │   ├── examples/         # 使用示例
-│       │   └── schemas/          # 数据结构定义
-│       ├── scripts/              # 工具脚本
-│       │   └── generate.js
+│       │   └── principles.md     # 技术设计原则
 │       └── assets/
 │           └── template/         # React 模板项目
+│               ├── index.html
+│               ├── package.json
+│               ├── vite.config.js
+│               ├── tailwind.config.js
+│               └── src/
+│                   ├── App.jsx
+│                   ├── main.jsx
+│                   ├── index.css
+│                   └── components/
+│                       ├── Background.jsx
+│                       ├── Navigation.jsx
+│                       └── SlideTransition.jsx
 ├── docs/
-│   └── plans/                    # 设计文档
+│   ├── skill-development-guide.md
+│   └── local-development-guide.md
 ├── README.md
 └── LICENSE
 ```
