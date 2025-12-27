@@ -82,10 +82,21 @@ export default function SlideXX() {
 | 活力 | 明亮色彩、大标题、动感布局 |
 | 简约 | 大量留白、细线条、单色调 |
 
+## 动画指南
+
+推荐使用 `framer-motion` 添加入场动画和微交互：
+
+- ✅ 入场动画：fade, slide, scale
+- ✅ Staggered reveals（延迟显示）
+- ✅ Hover 状态变化
+- ✅ 数字/进度动画
+
+详细动画模式请参考 [aesthetics.md](aesthetics.md)。
+
 ## 禁止事项
 
 1. ❌ 不要硬编码颜色值（如 `#3b82f6`）
 2. ❌ 不要使用外部 CSS 文件
 3. ❌ 不要使用 class components
-4. ❌ 不要添加复杂动画（简单 transition 可以）
-5. ❌ 不要引入额外依赖（只用 lucide-react）
+4. ❌ 不要使用 Inter/Roboto/Arial 等通用字体
+5. ❌ 只允许 lucide-react 和 framer-motion 作为额外依赖

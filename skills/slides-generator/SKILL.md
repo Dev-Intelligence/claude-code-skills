@@ -74,10 +74,11 @@ cd <output-dir>
 For each slide, dispatch a subagent with:
 
 **Fixed context (same for all):**
-- Tech stack: React + Tailwind CSS + lucide-react
+- **Aesthetic philosophy** (from [aesthetics.md](references/aesthetics.md)) - PRIMARY design reference
+- Tech stack: React + Tailwind CSS + lucide-react + framer-motion
 - Theme color variables (from tailwind.config.js)
 - Style keyword (glass / flat)
-- Design principles (from [principles.md](references/principles.md))
+- Technical principles (from [principles.md](references/principles.md))
 - First slide code (for reference, after slide 01 is generated)
 
 **Dynamic context (per subagent):**
@@ -91,10 +92,14 @@ For each slide, dispatch a subagent with:
 ```
 You are generating slide ${number} for a presentation.
 
+## Design Philosophy (IMPORTANT - Read First)
+${aestheticsContent}
+
 ## Technical Requirements
 - Framework: React function component
-- Styling: Tailwind CSS only
+- Styling: Tailwind CSS
 - Icons: lucide-react
+- Animations: framer-motion (for entrance animations, hover effects)
 - Export: default function component
 
 ## Theme Colors (use these variables, not hardcoded colors)
@@ -114,6 +119,13 @@ ${style === 'glass' ?
 - Content max-width: max-w-6xl mx-auto
 - Card border-radius: rounded-xl
 - Spacing: gap-4, gap-6, gap-8
+
+## Animation Patterns (use framer-motion)
+- Use motion.div for animated elements
+- Stagger children with staggerChildren: 0.1
+- Entrance: { opacity: 0, y: 20 } -> { opacity: 1, y: 0 }
+- Hover cards: whileHover={{ scale: 1.02 }}
+- Import: import { motion } from 'framer-motion'
 
 ## Slide Content
 Type: ${slideType}
