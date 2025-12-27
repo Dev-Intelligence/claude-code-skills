@@ -111,14 +111,61 @@ ${aestheticsContent}
 
 ## Style: ${style}
 ${style === 'glass' ?
-  'Use glassmorphism: bg-white/10 backdrop-blur-md border-white/20' :
+  'Use glassmorphism: glass class or bg-white/10 backdrop-blur-md border-white/20' :
   'Use flat design: bg-bg-card shadow-sm border-border-default'}
 
-## Design Principles
-- Page container: h-full w-full p-8
-- Content max-width: max-w-6xl mx-auto
-- Card border-radius: rounded-xl
-- Spacing: gap-4, gap-6, gap-8
+## Layout Safety Rules (CRITICAL - Prevents Overflow)
+
+### ⛔ FORBIDDEN - These WILL break the layout:
+- ❌ `h-screen` - NEVER use, it ignores parent constraints
+- ❌ `h-full` on inner content wrappers - steals padding space
+- ❌ Adding `p-*`, `px-*`, `py-*`, `pb-*` to slide-page - conflicts with built-in padding
+- ❌ Nesting divs with `h-full flex ... justify-center` inside slide-page
+- ❌ `min-h-screen` or any viewport-based heights
+
+### ✅ REQUIRED Structure:
+\`\`\`jsx
+<div className="slide-page">
+  {/* Background decorations - use absolute positioning */}
+  <div className="absolute inset-0 pointer-events-none">...</div>
+
+  {/* Header - fixed height, use mb-* for spacing */}
+  <header className="relative z-10 mb-6 shrink-0">
+    <h1>Title</h1>
+  </header>
+
+  {/* Content - use slide-content, it auto-fills remaining space */}
+  <div className="slide-content relative z-10">
+    {/* Grid/cards here - NO h-full on this div */}
+  </div>
+</div>
+\`\`\`
+
+### Why slide-page works:
+- Has `padding: 2.5rem` on all sides (top included!)
+- Has `padding-bottom: ~6.5rem` for navigation
+- Is `display: flex; flex-direction: column`
+- Children auto-size within the padded area
+
+### Content Density Limits (1080p baseline)
+- Max 4 cards per slide
+- Max 3 info items per card
+- Use `line-clamp-2` for long text
+- Use `truncate` for single-line overflow
+
+### Grid Layouts
+- 2 cards: `grid-auto-fit grid-cols-2`
+- 4 cards (2x2): `grid-auto-fit grid-2x2`
+- 3 cards: `grid-auto-fit grid-1x3`
+- 6 cards (2x3): `grid-auto-fit grid-2x3`
+
+### Card Pattern
+\`\`\`jsx
+<div className="card-fit glass rounded-xl p-4">
+  <header>Title</header>
+  <div className="card-body">Content</div>
+</div>
+\`\`\`
 
 ## Animation Patterns (use framer-motion)
 - Use motion.div for animated elements

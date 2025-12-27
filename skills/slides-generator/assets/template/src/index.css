@@ -2,6 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===== 布局安全区域变量 ===== */
+:root {
+  /* 导航栏安全区域 */
+  --nav-height: 4rem;
+  --nav-margin: 1.5rem; /* bottom-6 */
+  --nav-safe-area: calc(var(--nav-height) + var(--nav-margin) + 1rem);
+
+  /* 默认间距（2K 基准） */
+  --slide-padding: 2.5rem;
+  --card-gap: 1.5rem;
+}
+
+/* 1080p 及以下 */
+@media (max-width: 1920px) {
+  :root {
+    --slide-padding: 2rem;
+    --card-gap: 1rem;
+  }
+}
+
+/* 4K 及以上 */
+@media (min-width: 2560px) {
+  :root {
+    --slide-padding: 3rem;
+    --card-gap: 2rem;
+  }
+}
+
 /* 全局样式重置 */
 * {
   margin: 0;
@@ -237,3 +265,81 @@ h1, h2, h3, h4, h5, h6, .font-display {
 .rounded-vw-xl { border-radius: 1vw; }
 .rounded-vw-2xl { border-radius: 1.2vw; }
 .rounded-vw-full { border-radius: 50%; }
+
+/* ===== 幻灯片布局工具类 ===== */
+
+/* 幻灯片页面容器 - 预留导航安全区域 */
+.slide-page {
+  /* 强制尺寸约束 - 防止被 h-screen/h-full 覆盖 */
+  height: 100% !important;
+  max-height: 100% !important;
+  width: 100%;
+
+  /* 强制 padding - 防止被额外 padding 覆盖 */
+  padding: var(--slide-padding) !important;
+  padding-bottom: var(--nav-safe-area) !important;
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* 防御性：slide-page 的直接子元素不应撑满高度 */
+.slide-page > * {
+  max-height: 100%;
+  box-sizing: border-box;
+}
+
+/* 防御性：禁止 slide-page 内部使用 h-screen */
+.slide-page [class*="h-screen"] {
+  height: 100% !important;
+  max-height: 100% !important;
+}
+
+/* 幻灯片内容区 - 自动填充剩余空间 */
+.slide-content {
+  flex: 1;
+  min-height: 0; /* 允许 flex 收缩 */
+  max-height: 100%; /* 防止溢出 */
+  overflow: hidden;
+}
+
+/* 等高网格布局 */
+.grid-auto-fit {
+  display: grid;
+  gap: var(--card-gap);
+}
+
+.grid-2x2 {
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+
+.grid-1x3 {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1fr;
+}
+
+.grid-2x3 {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+
+/* 卡片自适应高度 */
+.card-fit {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.card-fit > * {
+  flex-shrink: 0;
+}
+
+.card-fit > .card-body {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}

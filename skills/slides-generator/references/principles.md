@@ -34,10 +34,106 @@
 
 ## 布局原则
 
-1. **页面容器**: 全屏 `h-screen w-screen`，内容区使用 `max-w-6xl mx-auto`
-2. **内边距**: 页面级 `p-8` 或 `p-12`，卡片级 `p-6`
-3. **间距规模**: 优先使用 `gap-4`, `gap-6`, `gap-8`
-4. **响应式**: 默认适配 1080p，自动缩放到 4K
+### ⛔ 绝对禁止的写法
+
+这些写法**会破坏布局**，导致内容溢出或被导航遮挡：
+
+```jsx
+// ❌ 禁止 h-screen - 无视父容器约束
+<div className="slide-page h-screen">
+
+// ❌ 禁止在 slide-page 上添加额外 padding
+<div className="slide-page p-12 pb-24">
+
+// ❌ 禁止内层 h-full 包裹 - 会吞掉 padding
+<div className="slide-page">
+  <div className="h-full flex flex-col justify-center">  {/* 错！ */}
+
+// ❌ 禁止 min-h-screen 或任何 viewport 单位
+<div className="slide-page min-h-screen">
+```
+
+### ✅ 正确的页面结构
+
+`slide-page` 类已内置所有必要的 padding（上下左右 2.5rem，底部 6.5rem）：
+
+```jsx
+<div className="slide-page">
+  {/* 背景装饰 - 使用 absolute 定位，不占布局空间 */}
+  <div className="absolute inset-0 pointer-events-none">
+    {/* 渐变、网格等装饰 */}
+  </div>
+
+  {/* 标题区 - 固定高度，shrink-0 防止压缩 */}
+  <header className="relative z-10 mb-6 shrink-0">
+    <h1>标题</h1>
+  </header>
+
+  {/* 内容区 - slide-content 自动填充剩余空间 */}
+  <div className="slide-content relative z-10">
+    {/* 卡片网格 - 不要加 h-full */}
+  </div>
+</div>
+```
+
+### slide-page 工作原理
+
+- `padding: 2.5rem`（四边）
+- `padding-bottom: ~6.5rem`（为导航栏预留）
+- `display: flex; flex-direction: column`
+- 子元素在 padding 区域内自动布局
+
+### 响应式断点
+
+| 屏幕 | 宽度 | padding | gap | 推荐卡片/行 |
+|------|------|---------|-----|-------------|
+| 1080p | ≤1920px | 2rem | 1rem | 2 |
+| 2K | ≤2560px | 2.5rem | 1.5rem | 2-3 |
+| 4K | >2560px | 3rem | 2rem | 3-4 |
+
+### 内容密度限制（防止溢出）
+
+| 屏幕 | 最大卡片数 | 每卡片最大条目 |
+|------|------------|----------------|
+| 1080p | 4 | 3 |
+| 2K | 4-6 | 4 |
+| 4K | 6-8 | 5 |
+
+### 多卡片网格布局
+
+```jsx
+// 2 卡片 - 横向排列
+<div className="grid-auto-fit grid-cols-2">
+
+// 4 卡片 - 2x2 网格
+<div className="grid-auto-fit grid-2x2">
+
+// 3 卡片 - 横向排列
+<div className="grid-auto-fit grid-1x3">
+
+// 6 卡片 - 2x3 网格
+<div className="grid-auto-fit grid-2x3">
+```
+
+### 卡片高度自适应
+
+```jsx
+// 卡片使用 card-fit 确保内容不溢出
+<div className="card-fit rounded-xl bg-bg-card">
+  <header className="p-4 border-b">标题</header>
+  <div className="card-body p-4">
+    {/* 内容区自动收缩 */}
+  </div>
+</div>
+```
+
+### 文字截断
+
+```jsx
+// 限制文字行数防止溢出
+<p className="line-clamp-2">长文本...</p>
+<h3 className="truncate">标题可能很长...</h3>
+```
 
 ## 样式规范
 
@@ -58,16 +154,87 @@
 
 ## 组件结构
 
-每个 Slide 文件必须：
+每个 Slide 文件必须遵循此模板：
 
 ```jsx
-// 必要的 import
 import { IconName } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function SlideXX() {
   return (
-    <div className="h-full w-full p-8 flex flex-col">
-      {/* 页面内容 */}
+    // ⚠️ 只用 slide-page，不加任何其他尺寸/padding 类
+    <div className="slide-page">
+      {/* 背景装饰 - absolute 定位 */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {/* 渐变光晕、网格等 */}
+      </div>
+
+      {/* 标题区 - shrink-0 防止被压缩 */}
+      <header className="relative z-10 mb-6 shrink-0">
+        <h1 className="text-4xl font-bold">标题</h1>
+      </header>
+
+      {/* 内容区 - 使用 slide-content 自动填充 */}
+      <div className="slide-content relative z-10">
+        {/* 卡片网格 */}
+      </div>
+    </div>
+  );
+}
+```
+
+### ⚠️ 常见错误
+
+```jsx
+// ❌ 错误：在 slide-page 里嵌套 h-full 容器
+<div className="slide-page">
+  <div className="h-full flex items-center justify-center">
+    {/* 这会吞掉所有 padding！ */}
+  </div>
+</div>
+
+// ✅ 正确：直接在 slide-page 里布局
+<div className="slide-page">
+  <header>...</header>
+  <div className="slide-content flex items-center justify-center">
+    {/* slide-content 会正确填充剩余空间 */}
+  </div>
+</div>
+```
+
+### 多卡片示例
+
+```jsx
+export default function SlideContenders() {
+  return (
+    <div className="slide-page">
+      {/* 背景装饰 */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl" />
+      </div>
+
+      {/* 标题 - shrink-0 */}
+      <header className="relative z-10 text-center mb-6 shrink-0">
+        <h1 className="text-4xl font-bold">四强选手</h1>
+        <p className="text-text-secondary">The Contenders</p>
+      </header>
+
+      {/* 内容 - slide-content + grid */}
+      <div className="slide-content relative z-10 grid-auto-fit grid-2x2">
+        {models.map(model => (
+          <div key={model.id} className="card-fit glass rounded-xl p-4">
+            <header className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 rounded-lg bg-primary-500/20" />
+              <h3 className="font-semibold">{model.name}</h3>
+            </header>
+            <div className="card-body space-y-2">
+              <div>Speed: {model.speed}</div>
+              <div>Context: {model.context}</div>
+              <div>Strength: {model.strength}</div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
