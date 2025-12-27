@@ -120,6 +120,15 @@ Claude 会通过交互式问答：
 - Lucide React Icons
 - JetBrains Mono Font
 
+## 开发新 Skill
+
+想要贡献新的 Skill？请参阅 [Skill 开发指南](docs/skill-development-guide.md)，包含：
+
+- 目录结构规范
+- SKILL.md 编写指南
+- 最佳实践
+- 完整 Checklist
+
 ## License
 
 Apache-2.0
