@@ -48,13 +48,30 @@ Claude Code skills collection by nanmi.
 
 ```
 用户: 帮我做一个 DeepSeek V3 的工程能力评测
+
+Claude: "好的，我来帮你创建评测 PPT。请确认以下信息：
+  1. 主角模型：DeepSeek V3 ✓
+  2. 对比模型有哪些？
+  3. 推荐使用 deepseek 蓝色主题，可以吗？"
+
+用户: "对比 Claude 3.5 和 GPT-4，主题 OK"
+
+Claude: "有几个评测任务？分别是什么？"
+
+... 继续交互式收集信息 ...
+
+Claude: [展示大纲] "确认开始生成吗？"
+
+用户: "确认"
+
+Claude: [生成项目]
 ```
 
-Claude 会自动：
+Claude 会通过交互式问答：
 1. 识别场景类型（LLM 评测）
-2. 选择配色主题（deepseek 蓝色）
-3. 生成幻灯片内容数据
-4. 创建完整的 Vite + React + Tailwind 项目
+2. 收集必要信息（对比模型、任务详情等）
+3. 展示 PPT 大纲让用户确认
+4. 确认后生成完整的 Vite + React + Tailwind 项目
 5. 启动开发服务器预览
 
 ## 技术栈
