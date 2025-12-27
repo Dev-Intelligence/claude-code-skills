@@ -30,6 +30,29 @@ Claude Code skills collection by [程序员阿江-Relakkes](https://space.bilibi
 
 如果启用后仍无法使用，尝试重启 Claude Code。
 
+## 项目结构
+
+```
+claude-code-skills/
+├── .claude-plugin/
+│   └── marketplace.json          # Marketplace 配置
+├── skills/
+│   └── slides-generator/         # 幻灯片生成器 Skill
+│       ├── SKILL.md              # Skill 定义
+│       ├── references/           # 参考文档
+│       │   ├── palettes.md       # 76个配色方案
+│       │   ├── examples/         # 使用示例
+│       │   └── schemas/          # 数据结构定义
+│       ├── scripts/              # 工具脚本
+│       │   └── generate.js
+│       └── assets/
+│           └── template/         # React 模板项目
+├── docs/
+│   └── plans/                    # 设计文档
+├── README.md
+└── LICENSE
+```
+
 ## 包含的 Skills
 
 ### slides-generator
@@ -44,29 +67,33 @@ Claude Code skills collection by [程序员阿江-Relakkes](https://space.bilibi
 - 技术报告与分析
 - 工具/框架对比评测
 
-**内置主题**:
-| 模型/产品 | 主题 | 主色 |
-|-----------|------|------|
-| MiniMax / M2.1 | minimax | 红色 #de283b |
-| DeepSeek | deepseek | 蓝色 #2563eb |
-| Claude / Anthropic | claude | 橙色 #d97706 |
-| GPT / OpenAI | openai | 绿色 #10a37f |
-| Kimi / Moonshot | moonshot | 紫色 #7c3aed |
-| 通用 | tech-blue | 天蓝 #0ea5e9 |
+**内置主题** (76个配色方案):
+
+| 风格 | 主题ID | 主色 |
+|------|--------|------|
+| 科技蓝 | tech-blue | #0ea5e9 |
+| 深蓝专业 | blue-professional | #2563eb |
+| 红色活力 | red-vibrant | #de283b |
+| 绿色自然 | green-nature | #10a37f |
+| 紫色优雅 | purple-elegant | #7c3aed |
+| 赛博朋克 | cyberpunk | #0f0f0f |
+| 金色奢华 | gold-luxury | #1e1e1e |
+| 中国朱红 | vermilion-chinese | #efd8bb |
+| ... | 更多主题见 references/palettes.md | ... |
 
 **使用示例**:
 
 ```
-用户: 帮我做一个 DeepSeek V3 的工程能力评测
+用户: 帮我做一个模型工程能力评测
 
-Claude: "好的，我来帮你创建评测 PPT。请确认以下信息：
-  1. 主角模型：DeepSeek V3 ✓
-  2. 对比模型有哪些？
-  3. 推荐使用 deepseek 蓝色主题，可以吗？"
+Claude: "好的，我来帮你创建评测 PPT。请告诉我：
+  1. 主角模型是什么？
+  2. 对比哪些模型？
+  3. 您想要什么风格？科技感/专业/活力..."
 
-用户: "对比 Claude 3.5 和 GPT-4，主题 OK"
+用户: "主角 Model A，对比 Model B 和 C，专业风格"
 
-Claude: "有几个评测任务？分别是什么？"
+Claude: "推荐 blue-professional 主题，有几个评测任务？"
 
 ... 继续交互式收集信息 ...
 

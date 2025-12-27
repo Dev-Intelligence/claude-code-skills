@@ -2,13 +2,14 @@
 
 /**
  * 幻灯片项目生成脚本
+ * 通用配色系统，不绑定特定品牌
  *
  * 用法：
  *   node scripts/generate.js <项目名称> [--theme=<主题>]
  *
  * 示例：
- *   node scripts/generate.js llm-benchmark-deepseek --theme=deepseek
- *   node scripts/generate.js product-demo-smartbot --theme=tech-blue
+ *   node scripts/generate.js tech-demo --theme=tech-blue
+ *   node scripts/generate.js product-showcase --theme=cyberpunk
  */
 
 import fs from 'fs';
@@ -17,12 +18,13 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const TEMPLATE_ROOT = path.resolve(__dirname, '..');
+const TEMPLATE_ROOT = path.resolve(__dirname, '..', 'assets', 'template');
 
-// 主题配置
+// 通用主题配置（从 themes/index.js 同步）
 const THEMES = {
-  minimax: {
-    name: "MiniMax",
+  'red-vibrant': {
+    name: "红色活力",
+    tags: ["红色", "活力", "对比"],
     colors: {
       'primary-100': '#de283b',
       'primary-200': '#ff6366',
@@ -36,8 +38,9 @@ const THEMES = {
       'bg-300': '#cccccc',
     }
   },
-  deepseek: {
-    name: "DeepSeek",
+  'blue-professional': {
+    name: "深蓝专业",
+    tags: ["蓝色", "专业", "商务"],
     colors: {
       'primary-100': '#2563eb',
       'primary-200': '#3b82f6',
@@ -51,8 +54,9 @@ const THEMES = {
       'bg-300': '#cbd5e1',
     }
   },
-  claude: {
-    name: "Claude",
+  'orange-warm': {
+    name: "橙色温暖",
+    tags: ["橙色", "温暖", "活力"],
     colors: {
       'primary-100': '#d97706',
       'primary-200': '#f59e0b',
@@ -66,8 +70,9 @@ const THEMES = {
       'bg-300': '#d6d3d1',
     }
   },
-  openai: {
-    name: "OpenAI",
+  'green-nature': {
+    name: "绿色自然",
+    tags: ["绿色", "自然", "环保"],
     colors: {
       'primary-100': '#10a37f',
       'primary-200': '#34d399',
@@ -81,8 +86,9 @@ const THEMES = {
       'bg-300': '#d1d5db',
     }
   },
-  moonshot: {
-    name: "Moonshot",
+  'purple-elegant': {
+    name: "紫色优雅",
+    tags: ["紫色", "浪漫", "优雅"],
     colors: {
       'primary-100': '#7c3aed',
       'primary-200': '#a78bfa',
@@ -98,6 +104,7 @@ const THEMES = {
   },
   'tech-blue': {
     name: "科技蓝",
+    tags: ["蓝色", "科技", "现代"],
     colors: {
       'primary-100': '#0ea5e9',
       'primary-200': '#38bdf8',
@@ -111,8 +118,9 @@ const THEMES = {
       'bg-300': '#bae6fd',
     }
   },
-  neutral: {
+  'neutral-gray': {
     name: "中性灰",
+    tags: ["灰色", "中性", "对比"],
     colors: {
       'primary-100': '#6b7280',
       'primary-200': '#9ca3af',
@@ -124,6 +132,134 @@ const THEMES = {
       'bg-100': '#ffffff',
       'bg-200': '#f9fafb',
       'bg-300': '#d1d5db',
+    }
+  },
+  'dark-sapphire': {
+    name: "深蓝宝石",
+    tags: ["深色", "蓝色", "专业", "科技"],
+    colors: {
+      'primary-100': '#1f3a5f',
+      'primary-200': '#4d648d',
+      'primary-300': '#3d5a80',
+      'accent-100': '#cee8ff',
+      'accent-200': '#a0c4e8',
+      'text-100': '#cee8ff',
+      'text-200': '#a0c4e8',
+      'bg-100': '#0f1c2e',
+      'bg-200': '#162438',
+      'bg-300': '#1f3a5f',
+    }
+  },
+  'cyberpunk': {
+    name: "赛博朋克",
+    tags: ["霓虹", "赛博朋克", "科幻", "未来"],
+    colors: {
+      'primary-100': '#ff6b6b',
+      'primary-200': '#dd4d51',
+      'primary-300': '#ff9999',
+      'accent-100': '#00ffff',
+      'accent-200': '#00999b',
+      'text-100': '#ffffff',
+      'text-200': '#cccccc',
+      'bg-100': '#0f0f0f',
+      'bg-200': '#1a1a1a',
+      'bg-300': '#333333',
+    }
+  },
+  'neon-purple': {
+    name: "霓虹紫",
+    tags: ["霓虹", "紫色", "夜店", "科幻"],
+    colors: {
+      'primary-100': '#6c35de',
+      'primary-200': '#a364ff',
+      'primary-300': '#cb80ff',
+      'accent-100': '#ff00ff',
+      'accent-200': '#b300b2',
+      'text-100': '#ffffff',
+      'text-200': '#d4d4d4',
+      'bg-100': '#241b35',
+      'bg-200': '#2d2345',
+      'bg-300': '#373737',
+    }
+  },
+  'summer-meadow': {
+    name: "夏日草地",
+    tags: ["自然", "夏季", "草地", "绿色"],
+    colors: {
+      'primary-100': '#8fbf9f',
+      'primary-200': '#68a67d',
+      'primary-300': '#b8d4c3',
+      'accent-100': '#f18f01',
+      'accent-200': '#833500',
+      'text-100': '#2d4a3e',
+      'text-200': '#4a6b5d',
+      'bg-100': '#f5ecd7',
+      'bg-200': '#ebe3ce',
+      'bg-300': '#d4cbb8',
+    }
+  },
+  'gold-luxury': {
+    name: "金色奢华",
+    tags: ["金色", "奢华", "高端"],
+    colors: {
+      'primary-100': '#ffd700',
+      'primary-200': '#ddb900',
+      'primary-300': '#fff4b3',
+      'accent-100': '#c49216',
+      'accent-200': '#5e3b00',
+      'text-100': '#ffd700',
+      'text-200': '#ddb900',
+      'bg-100': '#1e1e1e',
+      'bg-200': '#2a2a2a',
+      'bg-300': '#3a3a3a',
+    }
+  },
+  'vermilion-chinese': {
+    name: "中国朱红",
+    tags: ["中国风", "朱红", "金色", "传统"],
+    colors: {
+      'primary-100': '#c74331',
+      'primary-200': '#8b2f22',
+      'primary-300': '#e8a089',
+      'accent-100': '#f2c335',
+      'accent-200': '#c2950c',
+      'text-100': '#4a2c20',
+      'text-200': '#6b4a3e',
+      'bg-100': '#efd8bb',
+      'bg-200': '#e5cba8',
+      'bg-300': '#d4b894',
+    }
+  },
+  'minimal-bw': {
+    name: "极简黑白",
+    tags: ["极简", "黑白", "经典"],
+    colors: {
+      'primary-100': '#000000',
+      'primary-200': '#333333',
+      'primary-300': '#666666',
+      'accent-100': '#7f7f7f',
+      'accent-200': '#4a4a4a',
+      'text-100': '#000000',
+      'text-200': '#4a4a4a',
+      'bg-100': '#ffffff',
+      'bg-200': '#f5f5f5',
+      'bg-300': '#e0e0e0',
+    }
+  },
+  'banking-trust': {
+    name: "金融信任",
+    tags: ["专业", "银行", "金融", "信任"],
+    colors: {
+      'primary-100': '#0070c0',
+      'primary-200': '#004e86',
+      'primary-300': '#b3d4f0',
+      'accent-100': '#ffc000',
+      'accent-200': '#b38600',
+      'text-100': '#1a1a1a',
+      'text-200': '#4a4a4a',
+      'bg-100': '#f5f5f5',
+      'bg-200': '#ebebeb',
+      'bg-300': '#d1d1d1',
     }
   }
 };
@@ -180,6 +316,13 @@ export default {
 }
 
 /**
+ * 获取主题列表
+ */
+function getThemeList() {
+  return Object.keys(THEMES).join('|');
+}
+
+/**
  * 解析命令行参数
  */
 function parseArgs(args) {
@@ -216,13 +359,16 @@ function main() {
   node scripts/generate.js <项目名称> [选项]
 
 选项：
-  --theme=<主题>    主题名称 (minimax|deepseek|claude|openai|moonshot|tech-blue|neutral)
+  --theme=<主题>    主题名称 (${getThemeList()})
   --title=<标题>    项目标题（用于 index.html）
   --help            显示帮助信息
 
+可用主题：
+${Object.entries(THEMES).map(([id, t]) => `  ${id.padEnd(20)} ${t.name} (${t.tags.join(', ')})`).join('\n')}
+
 示例：
-  node scripts/generate.js llm-benchmark-deepseek --theme=deepseek
-  node scripts/generate.js product-demo --theme=tech-blue --title="产品演示"
+  node scripts/generate.js tech-demo --theme=tech-blue
+  node scripts/generate.js product-showcase --theme=cyberpunk --title="产品展示"
     `);
     process.exit(0);
   }
@@ -243,7 +389,7 @@ function main() {
   }
 
   console.log(`\n🚀 开始创建项目: ${config.projectName}`);
-  console.log(`   主题: ${config.theme}`);
+  console.log(`   主题: ${config.theme} (${THEMES[config.theme]?.name || '自定义'})`);
 
   try {
     // 1. 创建目标目录
@@ -309,8 +455,8 @@ function main() {
   5. npm run dev
 
 提示：
-  - 数据结构参考: ~/.claude/skills/slides-generator/schemas/slidesData.schema.md
-  - 示例参考: ~/.claude/skills/slides-generator/examples/
+  - 配色参考: references/palettes.md
+  - 更多主题可从 palettes.md 选取
 `);
 
   } catch (error) {

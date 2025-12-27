@@ -65,13 +65,13 @@ claude mcp add chrome-devtools -- npx chrome-devtools-mcp@latest
 
 | 信息项 | 问法示例 |
 |--------|----------|
-| 主角模型 | "主角模型是 DeepSeek V3，对吗？" |
-| 对比模型 | "对比哪些模型？（如 Claude 3.5、GPT-4）" |
+| 主角模型 | "主角模型是什么？" |
+| 对比模型 | "对比哪些模型？" |
 | 评测主题 | "评测主题是什么？（工程能力/推理能力/Agent能力）" |
 | 任务数量 | "有几个评测任务？" |
 | 任务名称 | "每个任务的名称是什么？" |
 | 任务详情 | "请描述第N个任务的目标、要求、结果" |
-| 主题确认 | "推荐 deepseek 蓝色主题，可以吗？" |
+| 风格偏好 | "您想要什么风格？科技感/专业/活力/自然..."（根据偏好推荐主题）|
 
 **产品演示场景 - 信息收集清单**：
 
@@ -91,11 +91,11 @@ claude mcp add chrome-devtools -- npx chrome-devtools-mcp@latest
 ```markdown
 ## 确认生成大纲
 
-**主题**：DeepSeek V3 工程能力评测
-**配色**：deepseek（蓝色 #2563eb）
+**主题**：模型工程能力评测
+**配色**：blue-professional（深蓝专业 #2563eb）
 
 **页面结构**：
-1. 首页 - DeepSeek V3 工程能力评测
+1. 首页 - 模型工程能力评测
 2. 评测框架 - 评测维度和流程
 3. 任务1 - FastAPI后端（需求/过程/结果）
 4. 任务2 - React组件（需求/过程/结果）
@@ -109,28 +109,40 @@ claude mcp add chrome-devtools -- npx chrome-devtools-mcp@latest
 
 ### Step 4: 主题应用
 
-根据主角模型/产品自动推荐配色主题：
+根据用户的风格偏好推荐配色主题。**不绑定特定品牌**，而是根据标签匹配：
 
-| 模型/产品 | 主题 | 主色 |
-|-----------|------|------|
-| MiniMax / M2.1 / ABAB | minimax | 红色 #de283b |
-| DeepSeek | deepseek | 蓝色 #2563eb |
-| Claude / Anthropic | claude | 橙色 #d97706 |
-| GPT / OpenAI / ChatGPT | openai | 绿色 #10a37f |
-| Kimi / Moonshot | moonshot | 紫色 #7c3aed |
-| 其他 | tech-blue | 天蓝 #0ea5e9 |
+**常用预设主题**：
+
+| 主题ID | 名称 | 标签 | 主色 |
+|--------|------|------|------|
+| tech-blue | 科技蓝 | 蓝色,科技,现代 | #0ea5e9 |
+| blue-professional | 深蓝专业 | 蓝色,专业,商务 | #2563eb |
+| red-vibrant | 红色活力 | 红色,活力,对比 | #de283b |
+| green-nature | 绿色自然 | 绿色,自然,环保 | #10a37f |
+| purple-elegant | 紫色优雅 | 紫色,浪漫,优雅 | #7c3aed |
+| orange-warm | 橙色温暖 | 橙色,温暖,活力 | #d97706 |
+| neutral-gray | 中性灰 | 灰色,中性,对比 | #6b7280 |
+| dark-sapphire | 深蓝宝石 | 深色,蓝色,专业 | #0f1c2e |
+| cyberpunk | 赛博朋克 | 霓虹,科幻,未来 | #0f0f0f |
+| gold-luxury | 金色奢华 | 金色,奢华,高端 | #1e1e1e |
+
+**主题选择流程**：
+1. 询问用户风格偏好（"您想要什么风格？科技感/专业/活力/自然..."）
+2. 根据关键词匹配标签，推荐2-3个候选主题
+3. 展示主题预览色，让用户选择
+4. 或从 [palettes.md](references/palettes.md) 读取更多配色方案（共76个）
 
 ### Step 5: 内容生成
 
-根据收集的信息和场景类型生成对应的内容结构。详见 [schemas/slidesData.schema.md](schemas/slidesData.schema.md)。
+根据收集的信息和场景类型生成对应的内容结构。详见 [references/schemas/slidesData.schema.md](references/schemas/slidesData.schema.md)。
 
 ### Step 6: 项目生成
 
 执行以下命令生成项目：
 
 ```bash
-# 1. 复制模板项目
-cp -r ~/.claude/plugins/slides-generator/templates/slides-template <项目名称>
+# 1. 复制模板项目（从 skill 的 assets/template 目录）
+cp -r <skill-path>/assets/template <项目名称>
 cd <项目名称>
 
 # 2. 应用主题（修改 tailwind.config.js）
@@ -262,18 +274,19 @@ npm install && npm run dev
 ### 示例 1: LLM 评测（完整交互流程）
 
 ```
-用户: "帮我做一个 DeepSeek V3 的工程能力评测"
+用户: "帮我做一个模型工程能力评测"
 
-Claude: "好的，我来帮你创建评测 PPT。请确认以下信息：
-  1. 主角模型：DeepSeek V3 ✓
-  2. 对比模型有哪些？（如 Claude 3.5、GPT-4）
-  3. 推荐使用 deepseek 蓝色主题，可以吗？"
+Claude: "好的，我来帮你创建评测 PPT。请告诉我：
+  1. 主角模型是什么？
+  2. 对比哪些模型？
+  3. 您想要什么风格？科技感/专业/活力/自然..."
 
-用户: "对比 Claude 3.5 和 GPT-4，主题 OK"
+用户: "主角是 Model A，对比 Model B 和 Model C，专业风格"
 
-Claude: "有几个评测任务？分别是什么？"
+Claude: "推荐使用 blue-professional（深蓝专业）主题，可以吗？
+  有几个评测任务？分别是什么？"
 
-用户: "3个：FastAPI后端、React组件、CLI工具"
+用户: "主题OK，3个任务：FastAPI后端、React组件、CLI工具"
 
 Claude: "请描述第1个任务 - FastAPI后端：
   - 任务目标
@@ -292,11 +305,11 @@ Claude: "请描述第3个任务 - CLI工具：..."
 
 Claude: "信息收集完成！以下是 PPT 大纲：
 
-  ## DeepSeek V3 工程能力评测
-  **主题**：deepseek（蓝色 #2563eb）
+  ## 模型工程能力评测
+  **主题**：blue-professional（深蓝专业 #2563eb）
 
   **页面结构**：
-  1. 首页 - DeepSeek V3 工程能力评测
+  1. 首页 - 模型工程能力评测
   2. 评测框架 - 评测维度和流程
   3. 任务1 - FastAPI后端（需求/过程/结果）
   4. 任务2 - React组件（需求/过程/结果）
@@ -370,10 +383,10 @@ Claude: "PPT 已生成并验证完成！项目地址：http://localhost:5173"
 
 ## 项目结构说明
 
-模板项目位于 `~/.claude/plugins/slides-generator/templates/slides-template/`：
+模板项目位于 skill 目录下的 `assets/template/`：
 
 ```
-slides-template/
+assets/template/
 ├── src/
 │   ├── data/
 │   │   ├── slidesData.js    # 所有内容数据（需要生成）
