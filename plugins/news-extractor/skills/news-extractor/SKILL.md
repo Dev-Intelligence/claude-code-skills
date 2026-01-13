@@ -17,6 +17,50 @@ description: 新闻站点内容提取。支持微信公众号、今日头条、�
 | 搜狐新闻 | sohu | `https://www.sohu.com/a/123456_789` |
 | 腾讯新闻 | tencent | `https://news.qq.com/rain/a/20251016A07W8J00` |
 
+## 依赖安装
+
+首次使用前需要安装依赖。根据你的环境选择以下任一方式：
+
+### 方式一：使用 uv (推荐)
+
+```bash
+cd .claude/skills/news-extractor
+
+# 安装依赖并创建虚拟环境
+uv sync
+
+# 运行脚本时 uv 会自动使用虚拟环境
+uv run scripts/extract_news.py --list-platforms
+```
+
+### 方式二：使用 pip
+
+```bash
+cd .claude/skills/news-extractor
+
+# 创建虚拟环境（可选但推荐）
+python -m venv .venv
+source .venv/bin/activate  # Linux/macOS
+# .venv\Scripts\activate   # Windows
+
+# 安装依赖
+pip install -r requirements.txt
+
+# 运行脚本
+python scripts/extract_news.py --list-platforms
+```
+
+### 依赖列表
+
+| 包名 | 用途 |
+|------|------|
+| pydantic | 数据模型验证 |
+| requests | HTTP 请求 |
+| curl_cffi | 浏览器模拟抓取 |
+| tenacity | 重试机制 |
+| parsel | HTML/XPath 解析 |
+| demjson3 | 非标准 JSON 解析 |
+
 ## 使用方式
 
 ### 基本用法
