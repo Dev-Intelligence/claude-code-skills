@@ -19,36 +19,14 @@ description: 新闻站点内容提取。支持微信公众号、今日头条、�
 
 ## 依赖安装
 
-首次使用前需要安装依赖。根据你的环境选择以下任一方式：
-
-### 方式一：使用 uv (推荐)
+本 skill 使用 uv 管理依赖。首次使用前需要安装：
 
 ```bash
-cd .claude/skills/news-extractor
-
-# 安装依赖并创建虚拟环境
+cd ~/.claude/skills/news-extractor
 uv sync
-
-# 运行脚本时 uv 会自动使用虚拟环境
-uv run scripts/extract_news.py --list-platforms
 ```
 
-### 方式二：使用 pip
-
-```bash
-cd .claude/skills/news-extractor
-
-# 创建虚拟环境（可选但推荐）
-python -m venv .venv
-source .venv/bin/activate  # Linux/macOS
-# .venv\Scripts\activate   # Windows
-
-# 安装依赖
-pip install -r requirements.txt
-
-# 运行脚本
-python scripts/extract_news.py --list-platforms
-```
+**重要**: 所有脚本必须使用 `uv run` 执行，不要直接用 `python` 运行。`uv run` 会自动使用项目虚拟环境中的依赖。
 
 ### 依赖列表
 
